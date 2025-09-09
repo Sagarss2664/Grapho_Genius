@@ -8,6 +8,7 @@ import UserDashboard from './components/UserDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import './App.css';
 import Dashboard from './components/userDashboard/Dashboard.jsx';
+import Team from './components/Team.jsx';
 // Protected Route Component
 const ProtectedRoute = ({ children, requiredUserType }) => {
   const token = localStorage.getItem('token');
@@ -31,6 +32,7 @@ function App() {
           <Route path="/register" element={<UserRegistration />} />
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/team" element={<Team />} />
           {/* Protected Routes */}
           <Route 
             path="/user-dashboard" 

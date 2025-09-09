@@ -93,7 +93,7 @@
 //     formData.append('file', file);
 
 //     try {
-//       const response = await axios.post('https://handwriting-backend-239409431927.asia-south1.run.app/upload', formData, {
+//       const response = await axios.post('https://handwritingbackendnode.onrender.com/upload', formData, {
 //         headers: {
 //           'Content-Type': 'multipart/form-data'
 //         },
@@ -1169,7 +1169,7 @@
 // //     // Uncomment for actual API call
     
 // //     try {
-// //       const response = await axios.post('https://handwriting-backend-239409431927.asia-south1.run.app/analyze', {
+// //       const response = await axios.post('https://handwritingbackendnode.onrender.com/analyze', {
 // //         script_scores: scriptScores,
 // //         questionnaire_scores: scores,
 // //         weight: weight
