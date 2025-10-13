@@ -25,7 +25,7 @@ const UserDashboard = () => {
   const fetchUserProfile = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('https://handwritingbackendnode.onrender.com/api/user/profile', {
+      const response = await axios.get('https://handwritingbackendnode-yllj.onrender.com/api/user/profile', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(response.data);
@@ -42,7 +42,7 @@ const UserDashboard = () => {
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post('https://handwritingbackendnode.onrender.com/api/user/logout', {}, {
+      await axios.post('https://handwritingbackendnode-yllj.onrender.com/api/user/logout', {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
     } catch (error) {
