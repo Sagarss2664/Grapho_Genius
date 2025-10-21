@@ -93,7 +93,7 @@
 //     formData.append('file', file);
 
 //     try {
-//       const response = await axios.post('https://handwritingbackendnode-yllj.onrender.com/upload', formData, {
+//       const response = await axios.post('https://handwritingbackendnode.onrender.com/upload', formData, {
 //         headers: {
 //           'Content-Type': 'multipart/form-data'
 //         },
@@ -1169,7 +1169,7 @@
 // //     // Uncomment for actual API call
     
 // //     try {
-// //       const response = await axios.post('https://handwritingbackendnode-yllj.onrender.com/analyze', {
+// //       const response = await axios.post('https://handwritingbackendnode.onrender.com/analyze', {
 // //         script_scores: scriptScores,
 // //         questionnaire_scores: scores,
 // //         weight: weight
@@ -1792,7 +1792,7 @@ axios.interceptors.response.use(
       
       try {
         const refreshResponse = await axios.post(
-          'https://handwritingbackendnode-yllj.onrender.com/api/refresh-token',
+          'https://handwritingbackendnode.onrender.com/api/refresh-token',
           {},
           { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }}
         );
@@ -1823,7 +1823,7 @@ const ClientManagement = ({ onClientSelect }) => {
   const fetchClients = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get('https://handwritingbackendnode-yllj.onrender.com/api/clients', {
+      const response = await axios.get('https://handwritingbackendnode.onrender.com/api/clients', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -1846,7 +1846,7 @@ const ClientManagement = ({ onClientSelect }) => {
     try {
       setIsLoading(true);
       setError('');
-      const response = await axios.post('https://handwritingbackendnode-yllj.onrender.com/api/clients', newClient, {
+      const response = await axios.post('https://handwritingbackendnode.onrender.com/api/clients', newClient, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -1858,7 +1858,7 @@ const ClientManagement = ({ onClientSelect }) => {
       
       // Send the form link to the client
       try {
-        await axios.post('https://handwritingbackendnode-yllj.onrender.com/api/clients/send-form', {
+        await axios.post('https://handwritingbackendnode.onrender.com/api/clients/send-form', {
           clientId: response.data._id
         }, {
           headers: {
@@ -1896,7 +1896,7 @@ const ClientManagement = ({ onClientSelect }) => {
     try {
       setIsLoading(true);
       setError('');
-      const response = await axios.put(`https://handwritingbackendnode-yllj.onrender.com/api/clients/${editingClient._id}`, newClient, {
+      const response = await axios.put(`https://handwritingbackendnode.onrender.com/api/clients/${editingClient._id}`, newClient, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -1925,7 +1925,7 @@ const ClientManagement = ({ onClientSelect }) => {
     try {
       setIsLoading(true);
       setError('');
-      await axios.delete(`https://handwritingbackendnode-yllj.onrender.com/api/clients/${clientId}`, {
+      await axios.delete(`https://handwritingbackendnode.onrender.com/api/clients/${clientId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -2429,7 +2429,7 @@ const Dashboard = () => {
   const checkForResponses = async (client) => {
     try {
       setIsAnalyzing(true);
-      const response = await axios.get(`https://handwritingbackendnode-yllj.onrender.com/api/clients/${client._id}/check-responses`, {
+      const response = await axios.get(`https://handwritingbackendnode.onrender.com/api/clients/${client._id}/check-responses`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -2470,7 +2470,7 @@ const Dashboard = () => {
     
     if (selectedClient) {
       try {
-        await axios.put(`https://handwritingbackendnode-yllj.onrender.com/api/clients/${selectedClient._id}`, {
+        await axios.put(`https://handwritingbackendnode.onrender.com/api/clients/${selectedClient._id}`, {
           scriptScores: data.script_scores
         });
       } catch (err) {
@@ -2495,7 +2495,7 @@ const Dashboard = () => {
       setCombinedScores(combined);
       
       if (selectedClient) {
-        await axios.put(`https://handwritingbackendnode-yllj.onrender.com/api/clients/${selectedClient._id}`, {
+        await axios.put(`https://handwritingbackendnode.onrender.com/api/clients/${selectedClient._id}`, {
           questionnaireScores: scores,
           combinedScores: combined,
           weight
@@ -2523,7 +2523,7 @@ const Dashboard = () => {
       
       if (selectedClient) {
         try {
-          await axios.put(`https://handwritingbackendnode-yllj.onrender.com/api/clients/${selectedClient._id}`, {
+          await axios.put(`https://handwritingbackendnode.onrender.com/api/clients/${selectedClient._id}`, {
             weight: newWeight,
             combinedScores: combined
           });
