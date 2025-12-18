@@ -36,9 +36,9 @@
 //       const headers = { Authorization: `Bearer ${token}` };
 
 //       const [pendingResponse, usersResponse, activitiesResponse] = await Promise.all([
-//         axios.get('https://handwritingbackendnode-yllj.onrender.com/api/admin/pending-users', { headers }),
-//         axios.get('https://handwritingbackendnode-yllj.onrender.com/api/admin/users', { headers }),
-//         axios.get('https://handwritingbackendnode-yllj.onrender.com/api/admin/user-activities', { headers })
+//         axios.get('https://handwritingbackendnode.onrender.com/api/admin/pending-users', { headers }),
+//         axios.get('https://handwritingbackendnode.onrender.com/api/admin/users', { headers }),
+//         axios.get('https://handwritingbackendnode.onrender.com/api/admin/user-activities', { headers })
 //       ]);
 
 //       setPendingUsers(pendingResponse.data);
@@ -58,7 +58,7 @@
 //     setActionLoading(userId);
 //     try {
 //       const token = localStorage.getItem('token');
-//       await axios.post(`https://handwritingbackendnode-yllj.onrender.com/api/admin/verify-user/${userId}`, {}, {
+//       await axios.post(`https://handwritingbackendnode.onrender.com/api/admin/verify-user/${userId}`, {}, {
 //         headers: { Authorization: `Bearer ${token}` }
 //       });
       
@@ -625,9 +625,9 @@ const AdminDashboard = () => {
       const headers = { Authorization: `Bearer ${token}` };
 
       const [pendingResponse, usersResponse, activitiesResponse] = await Promise.all([
-        axios.get('https://handwritingbackendnode-yllj.onrender.com/api/admin/pending-users', { headers }),
-        axios.get('https://handwritingbackendnode-yllj.onrender.com/api/admin/users', { headers }),
-        axios.get('https://handwritingbackendnode-yllj.onrender.com/api/admin/user-activities', { headers })
+        axios.get('https://handwritingbackendnode.onrender.com/api/admin/pending-users', { headers }),
+        axios.get('https://handwritingbackendnode.onrender.com/api/admin/users', { headers }),
+        axios.get('https://handwritingbackendnode.onrender.com/api/admin/user-activities', { headers })
       ]);
 
       setPendingUsers(pendingResponse.data);
@@ -657,7 +657,7 @@ const AdminDashboard = () => {
     setActionLoading(userId);
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`https://handwritingbackendnode-yllj.onrender.com/api/admin/verify-user/${userId}`, {}, {
+      await axios.post(`https://handwritingbackendnode.onrender.com/api/admin/verify-user/${userId}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
