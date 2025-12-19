@@ -356,7 +356,7 @@ axios.interceptors.response.use(
       sessionStorage.clear();
 
       // 🔥 REDIRECT
-      window.location.href = "/dashboard";
+      window.location.href = "/user-dashboard";
     }
 
     return Promise.reject(error);
