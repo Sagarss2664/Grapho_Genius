@@ -314,31 +314,51 @@ const ModernWeightSlider = ({ weight, onChange }) => {
 };
 
 // Add this to your frontend (before any API calls)
+// axios.interceptors.response.use(
+//   response => response,
+//   async error => {
+//     const originalRequest = error.config;
+    
+//     if (error.response?.status === 401 && !originalRequest._retry) {
+//       originalRequest._retry = true;
+      
+//       try {
+//         const refreshResponse = await axios.post(
+//           'https://handwritingbackendnode.onrender.com/api/refresh-token',
+//           {},
+//           { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }}
+//         );
+        
+//         localStorage.setItem('token', refreshResponse.data.token);
+//         originalRequest.headers['Authorization'] = `Bearer ${refreshResponse.data.token}`;
+//         return axios(originalRequest);
+//       } catch (refreshError) {
+//         // Redirect to login if refresh fails
+//         window.location.href = '/login';
+//         return Promise.reject(refreshError);
+//       }
+//     }
+    
+//     return Promise.reject(error);
+//   }
+// );
+// ✅ SIMPLE & SAFE AXIOS INTERCEPTOR
 axios.interceptors.response.use(
   response => response,
-  async error => {
-    const originalRequest = error.config;
-    
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      
-      try {
-        const refreshResponse = await axios.post(
-          'https://handwritingbackendnode.onrender.com/api/refresh-token',
-          {},
-          { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }}
-        );
-        
-        localStorage.setItem('token', refreshResponse.data.token);
-        originalRequest.headers['Authorization'] = `Bearer ${refreshResponse.data.token}`;
-        return axios(originalRequest);
-      } catch (refreshError) {
-        // Redirect to login if refresh fails
-        window.location.href = '/login';
-        return Promise.reject(refreshError);
-      }
+  error => {
+    const status = error.response?.status;
+
+    if (status === 401 || status === 403) {
+      console.warn("Auth error detected. Logging out.");
+
+      // 🔥 CLEAR EVERYTHING
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // 🔥 REDIRECT
+      window.location.href = "/user-login";
     }
-    
+
     return Promise.reject(error);
   }
 );
