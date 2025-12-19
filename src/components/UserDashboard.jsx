@@ -13,10 +13,27 @@ const UserDashboard = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const userType = localStorage.getItem('userType');
+    const storedUser = localStorage.getItem('user');
+    
+    console.log('Token exists:', !!token);
+    console.log('UserType:', userType);
+    console.log('Stored user:', storedUser);
     
     if (!token || userType !== 'user') {
+      console.log('No token or wrong user type, redirecting to login');
       navigate('/user-login');
       return;
+    }
+
+    // Try to use stored user data first
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        console.log('Parsed stored user:', parsedUser);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error('Error parsing stored user:', error);
+      }
     }
 
     fetchUserProfile();
@@ -25,13 +42,39 @@ const UserDashboard = () => {
   const fetchUserProfile = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('https://handwritingbackendnode-yllj.onrender.com/api/user/profile', {
-        headers: { Authorization: `Bearer ${token}` }
+      console.log('Fetching profile with token:', token ? 'Token exists' : 'No token');
+      
+      const response = await axios.get('https://handwritingbackendnode.onrender.com/api/user/profile', {
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
-      setUser(response.data);
+      
+      console.log('Profile API Response:', response);
+      console.log('Response data:', response.data);
+      console.log('Response data.user:', response.data?.user);
+      
+      // Handle different response structures
+      const userData = response.data?.user || response.data;
+      
+      if (userData) {
+        console.log('Setting user data:', userData);
+        setUser(userData);
+        
+        // Store in localStorage for future use
+        localStorage.setItem('user', JSON.stringify(userData));
+      } else {
+        console.warn('No user data found in response');
+      }
+      
     } catch (error) {
       console.error('Error fetching profile:', error);
+      console.error('Error response:', error.response);
+      console.error('Error message:', error.message);
+      
       if (error.response?.status === 401) {
+        console.log('Unauthorized, logging out');
         handleLogout();
       }
     } finally {
@@ -42,9 +85,11 @@ const UserDashboard = () => {
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post('https://handwritingbackendnode-yllj.onrender.com/api/user/logout', {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      if (token) {
+        await axios.post('https://handwritingbackendnode.onrender.com/api/user/logout', {}, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      }
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -58,6 +103,43 @@ const UserDashboard = () => {
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     document.body.classList.toggle('dark-mode');
+  };
+
+  // Get user initial safely
+  const getUserInitial = () => {
+    console.log('Getting user initial for:', user);
+    if (user?.name) {
+      return user.name.charAt(0).toUpperCase();
+    } else if (user?.username) {
+      return user.username.charAt(0).toUpperCase();
+    } else if (user?.email) {
+      return user.email.charAt(0).toUpperCase();
+    }
+    return 'U'; // Default to 'U' for User
+  };
+
+  // Format date safely
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    try {
+      const date = new Date(dateString);
+      return isNaN(date.getTime()) ? 'N/A' : date.toLocaleDateString();
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'N/A';
+    }
+  };
+
+  // Format date time safely
+  const formatDateTime = (dateString) => {
+    if (!dateString) return 'N/A';
+    try {
+      const date = new Date(dateString);
+      return isNaN(date.getTime()) ? 'N/A' : date.toLocaleString();
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'N/A';
+    }
   };
 
   if (loading) {
@@ -87,23 +169,20 @@ const UserDashboard = () => {
       {/* Header */}
       <header className="dashboard-header">
         <div className="header-content">
-          {/* <div className="brand">
-            <span className="logo-icon">✍️</span>
-            
-            <h1>GraphoGenius <span className="user-badge">User</span></h1>
-          </div> */}
           <div className="logo">
-                                              <span className="logo-icon"></span>
-                                              <img src={logo} alt="GraphoGenius Logo" className="logo-image" />
-                                              <span className="logo-text">GraphoGenius</span>
-                                            </div>
+            <span className="logo-icon"></span>
+            <img src={logo} alt="GraphoGenius Logo" className="logo-image" />
+            <span className="logo-text">GraphoGenius</span>
+          </div>
 
           <div className="header-actions">
             <div className="user-menu">
               <div className="user-avatar">
-                {user?.name.charAt(0).toUpperCase()}
+                {getUserInitial()}
               </div>
-              <span className="user-name">{user?.name}</span>
+              <span className="user-name">
+                {user?.name || user?.username || user?.email || 'User'}
+              </span>
               
               <div className="theme-toggle" onClick={toggleDarkMode}>
                 {darkMode ? '☀️' : '🌙'}
@@ -130,39 +209,37 @@ const UserDashboard = () => {
               <div className="profile-info">
                 <div className="info-row">
                   <label>Name:</label>
-                  <span>{user?.name}</span>
+                  <span>{user?.name || user?.username || 'N/A'}</span>
                 </div>
                 <div className="info-row">
                   <label>Email:</label>
-                  <span>{user?.email}</span>
+                  <span>{user?.email || 'N/A'}</span>
                 </div>
                 <div className="info-row">
                   <label>Mobile:</label>
-                  <span>{user?.mobile}</span>
+                  <span>{user?.mobile || user?.phone || 'N/A'}</span>
                 </div>
                 <div className="info-row">
                   <label>Role:</label>
                   <span className="role-badge">
-                    {user?.role}
+                    {user?.role || 'User'}
                     {user?.role === 'Other' && user?.otherRole && ` (${user.otherRole})`}
                   </span>
                 </div>
                 <div className="info-row">
                   <label>Status:</label>
                   <span className="status-badge verified pulse">
-                    ✅ Verified
+                    {user?.isVerified || user?.verified ? '✅ Verified' : '⏳ Pending'}
                   </span>
                 </div>
                 <div className="info-row">
                   <label>Member Since:</label>
-                  <span>{new Date(user?.createdAt).toLocaleDateString()}</span>
+                  <span>{formatDate(user?.createdAt || user?.created_at || user?.dateCreated)}</span>
                 </div>
-                {user?.lastLogin && (
-                  <div className="info-row">
-                    <label>Last Login:</label>
-                    <span>{new Date(user.lastLogin).toLocaleString()}</span>
-                  </div>
-                )}
+                <div className="info-row">
+                  <label>Last Login:</label>
+                  <span>{formatDateTime(user?.lastLogin || user?.last_login || user?.lastLoginDate)}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -176,12 +253,12 @@ const UserDashboard = () => {
             <div className="card-content">
               <div className="action-buttons">
                 <button
-      className="action-btn primary neon-hover"
-      onClick={() => navigate('/dashboard')}
-    >
-      <span className="btn-icon">📝</span>
-      New Analysis
-    </button>
+                  className="action-btn primary neon-hover"
+                  onClick={() => navigate('/dashboard')}
+                >
+                  <span className="btn-icon">📝</span>
+                  New Analysis
+                </button>
                 <button className="action-btn secondary neon-hover">
                   <span className="btn-icon">📊</span>
                   View Reports
@@ -216,9 +293,11 @@ const UserDashboard = () => {
                 <div className="activity-item">
                   <div className="activity-icon">✅</div>
                   <div className="activity-details">
-                    <span className="activity-text">Account verified by admin</span>
+                    <span className="activity-text">
+                      {user?.isVerified || user?.verified ? 'Account verified' : 'Account pending verification'}
+                    </span>
                     <span className="activity-time">
-                      {user?.verifiedAt ? new Date(user.verifiedAt).toLocaleDateString() : 'Recently'}
+                      {user?.verifiedAt ? formatDate(user.verifiedAt) : 'Recently'}
                     </span>
                   </div>
                 </div>
@@ -226,7 +305,7 @@ const UserDashboard = () => {
                   <div className="activity-icon">📝</div>
                   <div className="activity-details">
                     <span className="activity-text">Account created</span>
-                    <span className="activity-time">{new Date(user?.createdAt).toLocaleDateString()}</span>
+                    <span className="activity-time">{formatDate(user?.createdAt)}</span>
                   </div>
                 </div>
               </div>
