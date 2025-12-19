@@ -28,7 +28,6 @@ const AdminLogin = () => {
     setError('');
 
     try {
-      
       const response = await axios.post('https://handwritingbackendnode.onrender.com/api/admin/login', formData);
       
       // Store token and admin data
