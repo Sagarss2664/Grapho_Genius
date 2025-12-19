@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Auth.css';
-import logo from './GG-removebg-preview.png'; // Import your logo here
+import logo from './GG-removebg-preview.png'; // Import your logo
 
 const UserRegistration = () => {
   const [formData, setFormData] = useState({
